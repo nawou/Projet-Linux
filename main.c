@@ -9,6 +9,9 @@
 void separe(char* ligne, char** mots);
 void quitter(char** mots);
 void deplacer(char** mots);
+void renommer(char** mots);
+void changerP(char** mots);
+
 
 
 
@@ -31,6 +34,14 @@ int main()
 		else if(strcmp(mots[0], "cd") == 0)
 		{
 			deplacer(mots);
+		}
+		else if(strcmp(mots[0], "renommer") == 0) 
+		{
+			renommer(mots);
+		}
+		else if(strcmp(mots[0], "changePrompt") == 0) 
+		{
+			changerP(mots);
 		}
     }
 
@@ -64,4 +75,22 @@ void deplacer(char** mots) //fonctionnalité cd
 	{
 		perror("sns"); // perror permet d'afficher le message d'erreur
 	}
+}
+void renommer(char** mots) //fonctionnalité pour renommer un fichier
+{ 
+	if(mots[1]==NULL) //s'il n'y a pas de mot après renommer 
+	{printf("Fichier source introuvable");} //message d'erreur
+	else if(mots[2]==NULL) //s'il manque le fichier de destination
+	{printf("Error: pas de fichier de destination");}
+	else if(rename(mots[1], mots[2]) != 0) // si c'est 0 c'est bon sinon erreur
+	{
+		perror("sns"); // perror permet d'afficher le message d'erreur
+	}
+}
+
+
+
+void changerP(char** mots) //fonctionnalité pour changer le prompt
+{ 
+	getcwd(prompt, PATH_MAX); // getcwd = get current working directory, il prend le chemin et le met dans le prompt
 }
