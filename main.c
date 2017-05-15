@@ -8,6 +8,7 @@
 //Prototype
 void separe(char* ligne, char** mots);
 void quitter(char** mots);
+void deplacer(char** mots);
 
 
 
@@ -17,28 +18,32 @@ int main()
 {
 	char **mots; //pour séparer la ligne écrite en plusieurs parties
 	char *ligne; // la ligne saisie
-	ssize_t taille =0; // truc dont getline a besoin, avec 0 il lit jusqu'au bout de la ligne 
+	ssize_t taille =0; // truc dont getline a besoin, avec 0 il lit jusqu'au bout de la ligne
 	separe(ligne, mots); //separe met directement les mots dans le tableau mots
 	while(1) //boucle infinie
-	{ 
+	{
 		printf("%s$ ", prompt); //ce qui est affiché au debut de chaque ligne, %s renvoit la chaine de caractere prompt
 		getline(&ligne, &taille, stdin); //on envoie la ligne au getline, le nombre de caractères et l'endroit où on ecrit
-	if(strcmp(mots[0], "exit") == 0) // si le mot de la ligne est exit 
+	if(strcmp(mots[0], "exit") == 0) // si le mot de la ligne est exit
 		{
 			quitter(mots);
 		}
+		else if(strcmp(mots[0], "cd") == 0)
+		{
+			deplacer(mots);
+		}
     }
-    
+
   }
 
 
 void separe(char* ligne, char** mots)
 {
-	char *duplication; // pour travailler sur la ligne il faut la dupliquer 
-	duplication= strdup(ligne); //pour dupliquer la ligne 
+	char *duplication; // pour travailler sur la ligne il faut la dupliquer
+	duplication= strdup(ligne); //pour dupliquer la ligne
 	int i =0;
 	char *mot= strtok(duplication, " \n\t\r"); // r et n correspondent au retour à la ligne, t correspond à la tabulation au cas où
-	//strtok lit la ligne et s'arrête au moment où il trouve un espace, retour a la ligne ou tabulation 
+	//strtok lit la ligne et s'arrête au moment où il trouve un espace, retour a la ligne ou tabulation
 	while(mot !=NULL) //tant qu'on a un mot
 	{
 		mots[i++]=mot; //il rajoute le mot dans le tableau mots
@@ -47,6 +52,16 @@ void separe(char* ligne, char** mots)
 }
 
 void quitter(char** mots) //fonctionnalité quitter
-{ 
-	exit(0); 
+{
+	exit(0);
+}
+
+void deplacer(char** mots) //fonctionnalité cd
+{
+	if(mots[1]==NULL) //Si il n'y a pas de mot après cd
+	{printf("Déplacement impossible");} //message d'erreur
+	else if(chdir(mots[1]) != 0)
+	{
+		perror("sns"); // perror permet d'afficher le message d'erreur
+	}
 }
