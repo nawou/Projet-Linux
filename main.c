@@ -7,6 +7,7 @@
 
 //Prototype
 void separe(char* ligne, char** mots);
+void quitter(char** mots);
 
 
 
@@ -22,6 +23,10 @@ int main()
 	{ 
 		printf("%s$ ", prompt); //ce qui est affiché au debut de chaque ligne, %s renvoit la chaine de caractere prompt
 		getline(&ligne, &taille, stdin); //on envoie la ligne au getline, le nombre de caractères et l'endroit où on ecrit
+	if(strcmp(mots[0], "exit") == 0) // si le mot de la ligne est exit 
+		{
+			quitter(mots);
+		}
     }
     
   }
@@ -41,3 +46,7 @@ void separe(char* ligne, char** mots)
 	}
 }
 
+void quitter(char** mots) //fonctionnalité quitter
+{ 
+	exit(0); 
+}
