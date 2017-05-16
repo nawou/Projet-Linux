@@ -18,11 +18,11 @@ int main()
 	char **mots; //pour séparer la ligne écrite en plusieurs parties
 	char *ligne; // la ligne saisie
 	ssize_t taille =0; // truc dont getline a besoin, avec 0 il lit jusqu'au bout de la ligne 
-	separe(ligne, mots); //separe met directement les mots dans le tableau mots
 	while(1) //boucle infinie
 	{ 
 		printf("%s$ ", prompt); //ce qui est affiché au debut de chaque ligne, %s renvoit la chaine de caractere prompt
 		getline(&ligne, &taille, stdin); //on envoie la ligne au getline, le nombre de caractères et l'endroit où on ecrit
+		separe(ligne, mots); //separe met directement les mots dans le tableau mots
 	if(strcmp(mots[0], "exit") == 0) // si le mot de la ligne est exit 
 		{
 			quitter(mots);
