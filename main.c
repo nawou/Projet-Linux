@@ -46,11 +46,6 @@ int main()
 		{
 			ls(mots);
 		}
-		else if(strcmp(mots[0], "Lister_RepC") == 0)  // lister le contenu du repertoire courant
-		{
-			mots[1] = NULL;
-			ls(mots);
-		}
     }
 
   }
