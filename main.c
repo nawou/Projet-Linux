@@ -8,11 +8,13 @@
 
 //Prototype
 void separe(char* ligne, char** mots);
+
 void quitter(char** mots);
 void deplacer(char** mots);
 void renommer(char** mots);
 void changerP(char** mots);
 void ls(char** mots);
+void supprimer(char** mots);
 
 
 char prompt[PATH_MAX] = "shell/SNS" ;         //path_max longueur maximale qu'un chemin peut avoir sous Linux
@@ -22,18 +24,22 @@ int main()
 	char **mots; //pour séparer la ligne écrite en plusieurs parties
 	char *ligne; // la ligne saisie
 	ssize_t taille =0; // truc dont getline a besoin, avec 0 il lit jusqu'au bout de la ligne 
-	separe(ligne, mots); //separe met directement les mots dans le tableau mots
 	while(1) //boucle infinie
 	{
 		printf("%s$ ", prompt); //ce qui est affiché au debut de chaque ligne, %s renvoit la chaine de caractere prompt
 		getline(&ligne, &taille, stdin); //on envoie la ligne au getline, le nombre de caractères et l'endroit où on ecrit
-	if(strcmp(mots[0], "exit") == 0) // si le mot de la ligne est exit 
+		separe(ligne, mots); //separe met directement les mots dans le tableau mots
+	    if(strcmp(mots[0], "exit") == 0) // si le mot de la ligne est exit 
 		{
 			quitter(mots);
 		}
 		else if(strcmp(mots[0], "cd") == 0)
 		{
 			deplacer(mots);
+		}
+		else if(strcmp(mots[0], "supprimer") == 0) 
+		{
+			supprimer(mots);
 		}
 		else if(strcmp(mots[0], "renommer") == 0)
 		{
@@ -69,6 +75,9 @@ void separe(char* ligne, char** mots)
 		mots[i++]=mot; //il rajoute le mot dans le tableau mots
 		mot=strtok(NULL, " \n\t\r"); //pour reprendre à l'endroit où strtok s'est arrêté
 	}
+	
+	mots[i++]=NULL; //pour faire en sorte qu'après le dernier mot récupéré ce soit NULL car on avait un problème sur cd 
+	//exemple
 }
 
 void quitter(char** mots) //fonctionnalité quitter
@@ -79,18 +88,30 @@ void quitter(char** mots) //fonctionnalité quitter
 void deplacer(char** mots) //fonctionnalité cd
 {
 	if(mots[1]==NULL) //Si il n'y a pas de mot après cd
-	{printf("Déplacement impossible");} //message d'erreur
+	{printf("Déplacement impossible\n");} //message d'erreur
 	else if(chdir(mots[1]) != 0)
 	{
 		perror("sns"); // perror permet d'afficher le message d'erreur
 	}
 }
+
+
+void supprimer(char** mots) //fonctionnalité pour supprimer un fichier
+{ 
+	if(mots[1]==NULL) //Si il n'y a pas de mot après supprimer 
+	{printf("Suppression impossible, pas de fichier en argument.\n");} //message d'erreur
+	else if(remove(mots[1]) != 0) 
+	{
+		perror("sns"); // perror permet d'afficher le message d'erreur
+	}
+}
+
 void renommer(char** mots) //fonctionnalité pour renommer un fichier
-{
-	if(mots[1]==NULL) //s'il n'y a pas de mot après renommer
-	{printf("Fichier source introuvable");} //message d'erreur
+{ 
+	if(mots[1]==NULL) //s'il n'y a pas de mot après renommer 
+	{printf("Fichier source introuvable.\n");} //message d'erreur
 	else if(mots[2]==NULL) //s'il manque le fichier de destination
-	{printf("Error: pas de fichier de destination");}
+	{printf("Error: pas de fichier de destination\n");}
 	else if(rename(mots[1], mots[2]) != 0) // si c'est 0 c'est bon sinon erreur
 	{
 		perror("sns"); // perror permet d'afficher le message d'erreur
