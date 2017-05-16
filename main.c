@@ -4,6 +4,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <linux/limits.h> // pour prompt
+#include <dirent.h>  // pour ls
 
 //Prototype
 void separe(char* ligne, char** mots);
@@ -44,6 +45,11 @@ int main()
 		}
 		else if(strcmp(mots[0], "Lister") == 0) //lister le contenu du dossier donné en argument
 		{
+			ls(mots);
+		}
+		else if(strcmp(mots[0], "Lister_RepC") == 0)  // lister le contenu du repertoire courant
+		{
+			mots[1] = NULL;
 			ls(mots);
 		}
     }
@@ -90,7 +96,6 @@ void renommer(char** mots) //fonctionnalité pour renommer un fichier
 		perror("sns"); // perror permet d'afficher le message d'erreur
 	}
 }
-
 
 
 void changerP(char** mots) //fonctionnalité pour changer le prompt
