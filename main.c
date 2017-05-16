@@ -11,8 +11,7 @@ void quitter(char** mots);
 void deplacer(char** mots);
 void renommer(char** mots);
 void changerP(char** mots);
-
-
+void ls(char** mots);
 
 
 char prompt[PATH_MAX] = "shell/SNS" ;         //path_max longueur maximale qu'un chemin peut avoir sous Linux
@@ -35,13 +34,17 @@ int main()
 		{
 			deplacer(mots);
 		}
-		else if(strcmp(mots[0], "renommer") == 0) 
+		else if(strcmp(mots[0], "renommer") == 0)
 		{
 			renommer(mots);
 		}
-		else if(strcmp(mots[0], "changePrompt") == 0) 
+		else if(strcmp(mots[0], "changePrompt") == 0)
 		{
 			changerP(mots);
+		}
+		else if(strcmp(mots[0], "Lister") == 0) //lister le contenu du dossier donné en argument
+		{
+			ls(mots);
 		}
     }
 
@@ -77,8 +80,8 @@ void deplacer(char** mots) //fonctionnalité cd
 	}
 }
 void renommer(char** mots) //fonctionnalité pour renommer un fichier
-{ 
-	if(mots[1]==NULL) //s'il n'y a pas de mot après renommer 
+{
+	if(mots[1]==NULL) //s'il n'y a pas de mot après renommer
 	{printf("Fichier source introuvable");} //message d'erreur
 	else if(mots[2]==NULL) //s'il manque le fichier de destination
 	{printf("Error: pas de fichier de destination");}
@@ -91,6 +94,30 @@ void renommer(char** mots) //fonctionnalité pour renommer un fichier
 
 
 void changerP(char** mots) //fonctionnalité pour changer le prompt
-{ 
+{
 	getcwd(prompt, PATH_MAX); // getcwd = get current working directory, il prend le chemin et le met dans le prompt
+}
+
+void ls(char** mots) //fonctionnalité lister
+{
+	DIR* dossier; //représente le dossier dont on va lister mes fichiers, DIR est dans dirent.h
+	struct dirent *fichier; // struct dirent est le type de la variable qui represente un fichier
+	if(mots[1]==NULL)
+	{
+	char dossierCourant[PATH_MAX];
+	getcwd(dossierCourant, PATH_MAX);
+	dossier= opendir(dossierCourant); //ouvre le dossier et permet des modifs dans ce dossier
+	}
+	else
+	{dossier=opendir(mots[1]);
+	}
+
+	if(dossier==NULL) // si le dossier n'existe pas
+	{perror(mots[1]);}
+	while(fichier=readdir(dossier)) //tant qu'on arrive à recuperer le fait qu'il y ait un fichier
+	//dans le dossier on affiche son nom
+	{printf("%s ", fichier->d_name);}  //d_name c'est le nom du fichier
+
+	printf("\n"); //pour que le prompt se réaffiche à la ligne et ne soit pas collé
+
 }
