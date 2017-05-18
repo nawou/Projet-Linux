@@ -140,10 +140,14 @@ void ls(char** mots) //fonctionnalité lister
 
 	if(dossier==NULL) // si le dossier n'existe pas
 	{perror(mots[1]);}
+	
 	while(fichier=readdir(dossier)) //tant qu'on arrive à recuperer le fait qu'il y ait un fichier
 	//dans le dossier on affiche son nom
-	{printf("%s ", fichier->d_name);}  //d_name c'est le nom du fichier
-
-	printf("\n"); //pour que le prompt se réaffiche à la ligne et ne soit pas collé
-
+	{
+	if(fichier->d_name[0] != '.')
+	{printf("%s ", fichier->d_name); //d_name c'est le nom du fichier
+	printf("\n");}  //pour que le prompt se réaffiche à la ligne et ne soit pas collé 
+	}
+	 
 }
+
