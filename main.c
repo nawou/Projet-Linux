@@ -146,7 +146,7 @@ void ls(char** mots) //fonctionnalité lister
 	{
 	if(fichier->d_name[0] != '.')
 	{printf("%s ", fichier->d_name); //d_name c'est le nom du fichier
-	printf("\n");}  //pour que le prompt se réaffiche à la ligne et ne soit pas collé 
+	printf("\n");}  //pour un meilleur affichage du contenu et pour que le prompt se réaffiche à la ligne et ne soit pas collé 
 	}
 	 
 }
