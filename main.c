@@ -13,8 +13,9 @@ void quitter(char** mots);
 void deplacer(char** mots);
 void renommer(char** mots);
 void changerP(char** mots);
-void ls(char** mots);
+void lsLister(char** mots);
 void supprimer(char** mots);
+void lsListerRepC(char** mots);
 
 
 char prompt[PATH_MAX] = "shell/SNS" ;         //path_max longueur maximale qu'un chemin peut avoir sous Linux
@@ -51,12 +52,12 @@ int main()
 		}
 		else if(strcmp(mots[0], "Lister") == 0) //lister le contenu du dossier donné en argument
 		{
-			ls(mots);
+			lsLister(mots);
 		}
 		else if(strcmp(mots[0], "Lister_RepC") == 0)  // lister le contenu du repertoire courant
 		{
 			mots[1] = NULL;
-			ls(mots);
+			lsListerRepC(mots);
 		}
     }
 
@@ -124,8 +125,13 @@ void changerP(char** mots) //fonctionnalité pour changer le prompt
 	getcwd(prompt, PATH_MAX); // getcwd = get current working directory, il prend le chemin et le met dans le prompt
 }
 
-void ls(char** mots) //fonctionnalité lister
+void lsLister(char** mots) //fonctionnalité Lister
 {
+	if(mots[1]==NULL) //S'il n'y a pas de mot après Lister
+	{printf("Impossible, pas d'argument.\n");} //message d'erreur
+	
+	else {
+	
 	DIR* dossier; //représente le dossier dont on va lister mes fichiers, DIR est dans dirent.h
 	struct dirent *fichier; // struct dirent est le type de la variable qui represente un fichier
 	if(mots[1]==NULL)
@@ -135,8 +141,41 @@ void ls(char** mots) //fonctionnalité lister
 	dossier= opendir(dossierCourant); //ouvre le dossier et permet des modifs dans ce dossier
 	}
 	else
-	{dossier=opendir(mots[1]);
+	{dossier=opendir(mots[1]);}
+
+	if(dossier==NULL) // si le dossier n'existe pas
+	{perror(mots[1]);}
+    else{
+	while(fichier=readdir(dossier)) //tant qu'on arrive à recuperer le fait qu'il y ait un fichier
+	//dans le dossier on affiche son nom
+	{
+	if(fichier->d_name[0] != '.') // pour ne pas afficher les trucs qui commencent par un point
+	{printf("%s ", fichier->d_name); //d_name c'est le nom du fichier
+	printf("\n");}  //pour un meilleur affichage du contenu et pour que le prompt se réaffiche à la ligne et ne soit pas collé 
 	}
+	
+	}
+	 
+	 }
+}
+
+
+
+
+
+void lsListerRepC(char** mots) //fonctionnalité Lister_RepC
+{
+
+	DIR* dossier; //représente le dossier dont on va lister mes fichiers, DIR est dans dirent.h
+	struct dirent *fichier; // struct dirent est le type de la variable qui represente un fichier
+	if(mots[1]==NULL)
+	{
+	char dossierCourant[PATH_MAX];
+	getcwd(dossierCourant, PATH_MAX);
+	dossier= opendir(dossierCourant); //ouvre le dossier et permet des modifs dans ce dossier
+	}
+	else
+	{dossier=opendir(mots[1]);}
 
 	if(dossier==NULL) // si le dossier n'existe pas
 	{perror(mots[1]);}
@@ -144,10 +183,12 @@ void ls(char** mots) //fonctionnalité lister
 	while(fichier=readdir(dossier)) //tant qu'on arrive à recuperer le fait qu'il y ait un fichier
 	//dans le dossier on affiche son nom
 	{
-	if(fichier->d_name[0] != '.')
+	if(fichier->d_name[0] != '.')  // pour ne pas afficher les trucs qui commencent par un point
 	{printf("%s ", fichier->d_name); //d_name c'est le nom du fichier
 	printf("\n");}  //pour un meilleur affichage du contenu et pour que le prompt se réaffiche à la ligne et ne soit pas collé 
 	}
+	
+	 
 	 
 }
 
